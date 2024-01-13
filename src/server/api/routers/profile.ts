@@ -28,13 +28,15 @@ export const profileRouter = createTRPCRouter({
 
         if (profile == null) return;
 
+        const isFollowing = Array.isArray(profile.followers) && profile.followers.length > 0;
+
         return {
             name: profile.name,
             image: profile.image,
             followersCount: profile._count.followers,
             followsCount: profile._count.follows,
             tweetsCount: profile._count.tweets,
-            isFollowing: profile.followers.length > 0,
+            isFollowing
         };
         }),
     toggleFollow: protectedProcedure
