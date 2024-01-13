@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useSession, signIn } from "next-auth/react";
+import { useSession} from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams } from "next/navigation";
