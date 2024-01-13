@@ -3,7 +3,7 @@ import { useSession, signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { VscArrowLeft, VscSignIn} from "react-icons/vsc";
+import { VscArrowLeft} from "react-icons/vsc";
 import { Button } from "~/components/Button";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { InfiniteTweetList } from "~/components/InfiniteTweetList";
@@ -13,8 +13,8 @@ import { api } from "~/utils/api";
 const ProfilePage: NextPage = ()=>{
     const params = useParams<{id: string}>();
     const id = params?.id;
-    const profile = api.profile.getById.useQuery({id:id}).data;
-
+    
+    const profile = api.profile.getById.useQuery({id}).data;
     const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
         { userId: id },
         { getNextPageParam: (lastPage) => lastPage.nextCursor }
@@ -97,26 +97,8 @@ function FollowButton({
   }) {
     const session = useSession();
 
-    if(session.status !== "authenticated"){
-        return(
-            <>
-            <title>Log in to see profile...</title>
-            <button onClick={() => void signIn()}>
-                <IconHoverEffect>
-                    <span className="flex items-center gap-4">
-                        <VscSignIn className="h-8 w-8 fill-green-700" />
-                        <span className="hidden text-lg text-green-700 md:inline">
-                            Log In
-                        </span>
-                    </span>
-                </IconHoverEffect>
-            </button>
-            </>
-        )
-    }
-  
-    if (session.data.user.id === userId) {
-      return null;
+    if(session.status !== "authenticated" || session.data.user.id === userId){
+        return null;
     }
   
     return (
